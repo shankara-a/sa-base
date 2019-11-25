@@ -1,0 +1,25 @@
+{
+	"name": "fastqc_cfg",
+	"methodRepoMethod": {
+		"methodName": "FastQC",
+		"methodVersion": "latest",
+		"methodNamespace": "sanand"
+	},
+	"outputs": {
+		"fastqc.run_fastqc.fastqc_html": "this.fastqc_html",
+		"fastqc.run_fastqc.fastqc_zip": "this.fastqc_zip"
+	},
+	"inputs": {
+		"fastqc.run_fastqc.num_preempt": "5",
+		"fastqc.run_fastqc.sample_id": "this.name",
+		"fastqc.run_fastqc.fastq": "this.fastq",
+		"fastqc.run_fastqc.disk_space": "25",
+		"fastqc.run_fastqc.memory": "24",
+		"fastqc.run_fastqc.num_threads": "2"
+	},
+	"rootEntityType": "sample",
+	"prerequisites": {},
+	"methodConfigVersion": 1,
+	"deleted": false,
+	"namespace": "sanand"
+}
