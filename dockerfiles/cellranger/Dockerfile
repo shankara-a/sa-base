@@ -30,4 +30,4 @@ RUN dpkg -i /opt/bcl2fastq2_0v2.20.0.422-2_amd64.deb
 # Install Cellranger 3
 # ------------------------------------
 COPY cellranger-3.1.0 /opt/cellranger-3.1.0/
-RUN echo 'export PATH=/opt/cellranger-3.1.0:$PATH' >> ~/.bashrc
+RUN echo 'export PATH=/opt/cellranger-3.1.0/cellranger-cs/3.1.0/bin/:$PATH' >> ~/.bashrc
