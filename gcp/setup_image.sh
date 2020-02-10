@@ -144,6 +144,13 @@ sudo cd /opt && \
 sudo apt-get update && apt-get install -y bedtools
 
 # -----------------------------
+# Setup Docker
+# -----------------------------
+sudo apt-get update && sudo apt-get install -y docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# -----------------------------
 # Swap Space
 # -----------------------------
 sudo fallocate -l4G /swapfile
