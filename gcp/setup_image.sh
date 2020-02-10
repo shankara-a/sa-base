@@ -19,7 +19,7 @@ sudo apt-get update && sudo apt-get install -y \
   less \
   wget \
   r-base \
-  openjdk-8-jdk \ # install JAVA
+  openjdk-8-jdk \
   r-base-dev \
   r-recommended \
   fonts-texgyre \
@@ -62,6 +62,7 @@ pip3 install pandas \
 # -----------------------------
 # Install R packages
 # -----------------------------
+sudo R -e "install.packages('qvalue')"
 sudo R -e "install.packages('devtools')"
 sudo R -e "install.packages('optparse')"
 sudo R -e "install.packages('BiocManager')"
@@ -79,8 +80,7 @@ sudo R -e "devtools::install_github('GfellerLab/EPIC', build_vignettes=TRUE)"
 # -----------------------------
 # Install Parquet C Libs for R
 # -----------------------------
-# NOTE: this needed to be installed before installing R version of arrow
-# {
+# NOTE: this needed to be installed before installing R version of arrow {
 sudo apt update
 sudo apt install -y -V apt-transport-https gnupg lsb-release wget
 sudo wget -O /usr/share/keyrings/apache-arrow-keyring.gpg https://dl.bintray.com/apache/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/apache-arrow-keyring.gpg
@@ -119,13 +119,29 @@ sudo wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x8
 sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
 sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
 sudo add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
-sudo apt-get update
-sudo apt-get -y install cuda
+sudo apt-get update && install -y cuda
 
 # Add to path
 export PATH=$PATH:/usr/local/cuda-10.1/bin
 export CUDADIR=/usr/local/cuda-10.1
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-10.1/lib64
+
+# -----------------------------
+# Genomic Tools: samtools, htslib, bedtools
+# -----------------------------
+sudo cd /opt && \
+    wget --no-check-certificate https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2 && \
+    tar -xf samtools-1.9.tar.bz2 && rm samtools-1.9.tar.bz2 && cd samtools-1.9 && \
+    ./configure --enable-libcurl --enable-s3 --enable-plugins --enable-gcs && \
+    make && make install && make clean
+
+sudo cd /opt && \
+    wget --no-check-certificate https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2 && \
+    tar -xf htslib-1.9.tar.bz2 && rm htslib-1.9.tar.bz2 && cd htslib-1.9 && \
+    ./configure --enable-libcurl --enable-s3 --enable-plugins --enable-gcs && \
+    make && make install && make clean
+
+sudo apt-get update && apt-get install -y bedtools
 
 # -----------------------------
 # Swap Space
