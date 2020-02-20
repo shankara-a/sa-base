@@ -57,7 +57,8 @@ pip3 install pandas \
                statsmodels \
                argparse \
                torch \
-               torchvision
+               torchvision \
+               port_for
 
 # -----------------------------
 # Install R packages
@@ -129,19 +130,17 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-10.1/lib64
 # -----------------------------
 # Genomic Tools: samtools, htslib, bedtools
 # -----------------------------
-sudo cd /opt && \
-    wget --no-check-certificate https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2 && \
+wget --no-check-certificate https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2 && \
     tar -xf samtools-1.9.tar.bz2 && rm samtools-1.9.tar.bz2 && cd samtools-1.9 && \
-    ./configure --enable-libcurl --enable-s3 --enable-plugins --enable-gcs && \
-    make && make install && make clean
+    sudo ./configure --enable-libcurl --enable-s3 --enable-plugins --enable-gcs && \
+    sudo make && sudo make install && sudo make clean
 
-sudo cd /opt && \
-    wget --no-check-certificate https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2 && \
+wget --no-check-certificate https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2 && \
     tar -xf htslib-1.9.tar.bz2 && rm htslib-1.9.tar.bz2 && cd htslib-1.9 && \
-    ./configure --enable-libcurl --enable-s3 --enable-plugins --enable-gcs && \
-    make && make install && make clean
+    sudo ./configure --enable-libcurl --enable-s3 --enable-plugins --enable-gcs && \
+    sudo make && sudo make install && sudo make clean
 
-sudo apt-get update && apt-get install -y bedtools
+sudo apt-get update && sudo apt-get install -y bedtools
 
 # -----------------------------
 # Setup Docker
@@ -158,3 +157,24 @@ sudo chmod 700 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
 echo "/swapfile none swap sw 0 0" | sudo tee -a /etc/fstab
+
+# -----------------------------
+# Helpers
+# -----------------------------
+echo "
+rmate ()
+{
+    export RMATE_PORT=$(python3 -c 'import port_for;print(port_for.select_random())');
+    echo 'Enter the following into the SSH menu:';
+    echo '-R $RMATE_PORT:localhost:52779';
+    unset -f rmate
+}
+
+jp ()
+{
+    export JUPYTER_PORT=$(python3 -c 'import port_for;print(port_for.select_random())');
+    echo 'Enter the following command in the ~C ssh menu:';
+    echo '-L $JUPYTER_PORT:localhost:$JUPYTER_PORT';
+    jupyter notebook --no-browser --ip=127.0.0.1 --port=$JUPYTER_PORT
+}
+" >> ~/.bashrc
