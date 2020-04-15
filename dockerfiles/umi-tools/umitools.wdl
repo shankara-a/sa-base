@@ -11,9 +11,11 @@ task umitools_dedup_task {
   Int num_cores
 
 	command {
-    umitools dedup -I ${bam} \
+    umi_tools dedup -I ${bam} \
 									--output-stats=dedup \
 									-S ${id}.dedup.bam
+	}
+	
 	output {
 		File dedup_edit_distance = "dedup_edit_distance.tsv"
 		File dedup_per_umi = "dedup_per_umi.tsv"
